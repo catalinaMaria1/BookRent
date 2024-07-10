@@ -17,7 +17,7 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     private void addSampleBooks() {
-        // Adăugați cărți folosind metoda insertBook din BooksDBHelper
+
         dbHelper.insertBook("Harry Potter", "https://example.com/harry_potter.jpg",
                 "A magical adventure", "J.K. Rowling", "Great book!");
         dbHelper.insertBook("Lord of the Rings", "https://example.com/lotr.jpg",
@@ -25,7 +25,7 @@ public class AddBookActivity extends AppCompatActivity {
         dbHelper.insertBook("To Kill a Mockingbird", "https://example.com/to_kill_a_mockingbird.jpg",
                 "Classic novel", "Harper Lee", "Powerful message.");
 
-        // Afișare mesaj de confirmare
+
         Toast.makeText(this, "Cărți adăugate în baza de date", Toast.LENGTH_SHORT).show();
     }
 }

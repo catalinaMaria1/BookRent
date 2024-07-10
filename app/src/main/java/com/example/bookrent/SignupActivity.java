@@ -11,7 +11,7 @@ import com.example.bookrent.databinding.ActivitySignupBinding;
 
 public class SignupActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
-    BazaDeDate databaseHelper;
+    MyDataBase databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class SignupActivity extends AppCompatActivity {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        databaseHelper = new BazaDeDate(this);
+        databaseHelper = new MyDataBase(this);
 
         binding.signupButton.setOnClickListener(new View.OnClickListener() {
             @Override

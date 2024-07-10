@@ -12,7 +12,7 @@ import com.example.bookrent.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    BazaDeDate databaseHelper;
+    MyDataBase databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        databaseHelper = new BazaDeDate(this);
+        databaseHelper = new MyDataBase(this);
 
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
