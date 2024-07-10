@@ -15,6 +15,17 @@ public class User {
         this.bio = bio;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullname='" + fullname + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", bio='" + bio + '\'' +
+                '}';
+    }
+
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }

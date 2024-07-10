@@ -34,12 +34,7 @@ public class BazaDeDate extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase MyDatabase, int i, int i1){
 MyDatabase.execSQL("drop Table if exists allusers");
-        /*
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.login_page);
-        email=(EditText) findViewById(R.id.emailEditText);*/
-    }
+        }
     public Boolean insertData(String email, String password){
         SQLiteDatabase MyDatabase =this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();

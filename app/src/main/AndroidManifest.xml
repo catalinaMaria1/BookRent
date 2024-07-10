@@ -13,11 +13,20 @@
         android:theme="@style/Theme.BookRent"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name=".CategoryAddActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".BooksAdapter"
             android:exported="false" />
+        <activity
+            android:name=".BooksDBHelper"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SignupActivity"
+            android:exported="true" />
         <activity
             android:name=".BazaDeDate"
             android:exported="false" />

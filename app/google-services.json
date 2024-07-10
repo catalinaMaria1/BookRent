@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "951283489652",
+    "project_id": "bookrent-5b430",
+    "storage_bucket": "bookrent-5b430.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951283489652:android:8e8f8dd28fb55a816cea21",
+        "android_client_info": {
+          "package_name": "com.example.bookrent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI_t8jicv3rKD8NJPOb1ukxhAc-dC1iJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+
+}
