@@ -2,15 +2,16 @@ package com.example.bookrent;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.ArrayList;
 
 public class BooksDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "books.db";
-    private static final int DATABASE_VERSION = 2; // Update version to force database upgrade
+    private static final int DATABASE_VERSION = 2;
 
-    // Books table
     public static final String TABLE_NAME_BOOKS = "books";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TITLE = "title";
@@ -18,11 +19,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_AUTHOR = "author";
     public static final String COLUMN_REVIEWS = "reviews";
-
-    // Categories table
-    public static final String TABLE_NAME_CATEGORIES = "categories";
-    public static final String COLUMN_CATEGORY_ID = "_id";
-    public static final String COLUMN_CATEGORY_NAME = "category";
 
     private static final String SQL_CREATE_BOOKS_TABLE =
             "CREATE TABLE " + TABLE_NAME_BOOKS + " (" +
@@ -33,11 +29,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                     COLUMN_AUTHOR + " TEXT, " +
                     COLUMN_REVIEWS + " TEXT)";
 
-    private static final String SQL_CREATE_CATEGORIES_TABLE =
-            "CREATE TABLE " + TABLE_NAME_CATEGORIES + " (" +
-                    COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_CATEGORY_NAME + " TEXT)";
-
     public BooksDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -45,17 +36,14 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
-        db.execSQL(SQL_CREATE_CATEGORIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BOOKS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CATEGORIES);
         onCreate(db);
     }
 
-    // Method to insert a book into the database
     public void insertBook(String title, String image, String description, String author, String reviews) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -69,13 +57,39 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Method to insert a category into the database
-    public void insertCategory(String category) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_CATEGORY_NAME, category);
+    public ArrayList<Book> getAllBooks() {
+        ArrayList<Book> booksList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_BOOKS, null, null, null, null, null, null);
 
-        db.insert(TABLE_NAME_CATEGORIES, null, values);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE));
+                String image = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
+                String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
+                String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
+
+                booksList.add(new Book(id, title, image, description, author, reviews));
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+
+        return booksList;
+    }
+
+    public void eraseBook(String bookName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = COLUMN_TITLE + " LIKE ?";
+        String[] selectionArgs = { bookName };
+
+        db.delete(TABLE_NAME_BOOKS, selection, selectionArgs);
         db.close();
     }
 }
