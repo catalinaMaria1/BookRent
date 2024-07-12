@@ -84,12 +84,13 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         return booksList;
     }
 
-    public void eraseBook(String bookName) {
+    public boolean eraseBook(String bookName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String selection = COLUMN_TITLE + " LIKE ?";
         String[] selectionArgs = { bookName };
 
         db.delete(TABLE_NAME_BOOKS, selection, selectionArgs);
         db.close();
+        return false;
     }
 }

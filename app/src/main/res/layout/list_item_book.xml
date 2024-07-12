@@ -3,33 +3,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/textViewTitle"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_marginBottom="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Book Title"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewAuthor"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="4dp"/>
+        android:text="Author"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/textViewDescription"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginBottom="4dp"/>
+        android:text="Description"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/textViewReviews"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        android:text="Reviews"
+        android:textSize="16sp" />
 
 </LinearLayout>
