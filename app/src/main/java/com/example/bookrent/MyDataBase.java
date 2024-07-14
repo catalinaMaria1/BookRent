@@ -1,16 +1,15 @@
 package com.example.bookrent;
 
+import static com.example.bookrent.AESCrypt.encrypt;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import android.widget.EditText;
 import android.widget.Button;
 import android.os.Bundle;
@@ -34,13 +33,17 @@ public class MyDataBase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase MyDatabase, int i, int i1){
         MyDatabase.execSQL("drop Table if exists allusers");
-        /*
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.login_page);
-        email=(EditText) findViewById(R.id.emailEditText);*/
+
     }
     public Boolean insertData(String email, String password){
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        try {
+            password=encrypt(password) ;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         SQLiteDatabase MyDatabase =this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put("email", email);
@@ -60,8 +63,17 @@ public class MyDataBase extends SQLiteOpenHelper {
         else {return false;}
 
     }
-    public Boolean checkEmailPassword( String email, String password)
-    { SQLiteDatabase MyDatabase = this.getWritableDatabase();
+    public Boolean checkEmailPassword( String email, @NonNull String password)
+    {
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        try {
+            password=encrypt(password) ;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        SQLiteDatabase MyDatabase = this.getWritableDatabase();
         Cursor cursor= MyDatabase.rawQuery("Select * from allusers where email = ? and password = ?", new String[]{email, password});
         if(cursor.getCount()>0)
         {return true;}
