@@ -21,7 +21,7 @@ public class DisplayBooksActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_books);
+        setContentView(R.layout.activity_home);
 
         recyclerViewBooks = findViewById(R.id.recyclerViewBooks);
         recyclerViewBooks.setLayoutManager(new LinearLayoutManager(this));

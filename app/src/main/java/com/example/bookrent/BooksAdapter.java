@@ -57,4 +57,5 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         booksList.addAll(updatedBooksList);
         notifyDataSetChanged();
     }
+
 }

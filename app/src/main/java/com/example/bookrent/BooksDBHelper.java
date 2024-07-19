@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 
 public class BooksDBHelper extends SQLiteOpenHelper {
@@ -36,7 +37,8 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
-    }
+
+  }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -44,8 +46,8 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertBook(String title, String image, String description, String author, String reviews) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
+    public void insertBook(SQLiteDatabase db, String title, String image, String description, String author, String reviews) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, title);
         values.put(COLUMN_IMAGE, image);
@@ -54,6 +56,12 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_REVIEWS, reviews);
 
         db.insert(TABLE_NAME_BOOKS, null, values);
+    }
+
+    // Metodă care folosește baza de date curentă
+    public void insertBook(String title, String image, String description, String author, String reviews) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        insertBook(db, title, image, description, author, reviews);
         db.close();
     }
 
@@ -91,8 +99,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
 
         db.delete(TABLE_NAME_BOOKS, selection, selectionArgs);
         db.close();
-        return false;
+        return true;
     }
-
-
 }
+
