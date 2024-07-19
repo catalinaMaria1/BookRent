@@ -39,7 +39,7 @@
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introdu adresa de email"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="16dp"
             android:textSize="18sp" />
@@ -65,7 +65,7 @@
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Introdu parola"
+            android:hint="Password"
             android:inputType="textPassword"
             android:padding="16dp"
             android:textSize="18sp" />

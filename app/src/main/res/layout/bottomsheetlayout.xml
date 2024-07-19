@@ -16,14 +16,14 @@
             android:textAlignment="viewStart"
             android:text="Create"
             android:padding="8dp"
-            android:textColor="@color/purple"
+            android:textColor="@color/white"
             android:layout_marginStart="12dp"
             android:layout_marginTop="5dp"
             android:textSize="25dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutVideo"
+        android:id="@+id/layoutUpload"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upload a book"
-            android:textColor="@color/purple"
+            android:textColor="@color/white"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
     </LinearLayout>
@@ -54,8 +54,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create a short"
-            android:textColor="@color/purple"
+            android:text="Cart"
+            android:textColor="@color/white"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>
     </LinearLayout>
@@ -73,9 +73,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Go live"
-            android:textColor="@color/purple"
             android:layout_marginLeft="30dp"
-            android:textSize="16sp"/>
+            android:text="Library"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

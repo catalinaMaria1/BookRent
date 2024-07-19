@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment {
+public class LibraryFragment extends Fragment {
 
     private RecyclerView recyclerViewBooks;
     private BooksAdapter booksAdapter;
@@ -17,7 +17,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_display_books, container, false);
+        View view = inflater.inflate(R.layout.fragment_library, container, false);
 
         recyclerViewBooks = view.findViewById(R.id.recyclerViewBooks);
         recyclerViewBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
