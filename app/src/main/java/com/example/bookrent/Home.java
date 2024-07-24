@@ -39,18 +39,25 @@ public class Home extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.home) {
-                    // Deschide DisplayBooksActivity
                     Intent intent = new Intent(Home.this, DisplayBooksActivity.class);
                     startActivity(intent);
                   } else if (itemId == R.id.account) {
-                    Toast.makeText(Home.this, "Account selected", Toast.LENGTH_SHORT).show();
-                } else if (itemId == R.id.login) {
-                    Toast.makeText(Home.this, "Login selected", Toast.LENGTH_SHORT).show();
-                } else if (itemId == R.id.share) {
+                    Intent intent=new Intent (Home.this, DisplayBooksActivity.class);
+                  } else if (itemId == R.id.login)
+                    {
+                        Intent intent=new Intent(Home.this,LoginActivity.class);
+                        startActivity(intent);
+                     } else if (itemId == R.id.share) {
                     Toast.makeText(Home.this, "Share selected", Toast.LENGTH_SHORT).show();
-                } else {
-                    return false;
                 }
+                else if(itemId==R.id.register)
+                {
+                    Intent intent=new Intent(Home.this,SignupActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    return false;
+               }
 
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;

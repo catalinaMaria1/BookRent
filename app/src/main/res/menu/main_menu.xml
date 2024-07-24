@@ -15,6 +15,10 @@
             android:icon="@drawable/baseline_login_24"
             android:title="Login" />
         <item
+            android:id="@+id/register"
+            android:icon="@drawable/baseline_app_registration_24"
+            android:title="Register" />
+        <item
             android:id="@+id/share"
             android:icon="@drawable/baseline_share_24"
             android:title="Share" />
