@@ -42,8 +42,9 @@ public class Home extends AppCompatActivity {
                     Intent intent = new Intent(Home.this, DisplayBooksActivity.class);
                     startActivity(intent);
                   } else if (itemId == R.id.account) {
-                    Intent intent=new Intent (Home.this, DisplayBooksActivity.class);
-                  } else if (itemId == R.id.login)
+                    Intent intent=new Intent (Home.this, Account.class);
+                    startActivity(intent);
+                } else if (itemId == R.id.login)
                     {
                         Intent intent=new Intent(Home.this,LoginActivity.class);
                         startActivity(intent);
