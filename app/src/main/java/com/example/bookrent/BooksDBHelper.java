@@ -5,13 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class BooksDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "books.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4; // Schimbă versiunea la 4
 
     public static final String TABLE_NAME_BOOKS = "books";
     public static final String COLUMN_ID = "_id";
@@ -38,14 +39,40 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
 
-  }
+        // Verifică și inserează datele inițiale dacă este necesar
+        insertInitialBooksIfEmpty(db);
+    }
+
+    private void insertInitialBooks(SQLiteDatabase db) {
+        Log.d("BooksDBHelper", "Inserting initial books");
+        insertBook(db, "Book Title ", "image_url_1", "Description 1", "Author 1", "Reviews 1");
+        insertBook(db, "Book Title 2", "image_url_2", "Description 2", "Author 2", "Reviews 2");
+        insertBook(db, "Book Title 3", "image_url_3", "Description 3", "Author 3", "Reviews 3");
+        insertBook(db,
+                "Cat timp infloresc lamaii",
+                "android.resource://com.example.bookrent/drawable/cat_timp_infloresc_lamaii",
+                "Description 1",
+                "Author 1",
+                "Reviews 1"
+        );
+    }
+
+    private void insertInitialBooksIfEmpty(SQLiteDatabase db) {
+        Cursor cursor = db.query(TABLE_NAME_BOOKS, null, null, null, null, null, null);
+        if (cursor != null && cursor.getCount() == 0) {
+            insertInitialBooks(db);
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d("BooksDBHelper", "Upgrading database from version " + oldVersion + " to " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_BOOKS);
         onCreate(db);
     }
-
 
     public void insertBook(SQLiteDatabase db, String title, String image, String description, String author, String reviews) {
         ContentValues values = new ContentValues();
@@ -102,4 +129,3 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         return true;
     }
 }
-
