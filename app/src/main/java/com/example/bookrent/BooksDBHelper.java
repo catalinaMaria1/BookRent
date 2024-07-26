@@ -39,7 +39,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
 
-        // Verifică și inserează datele inițiale dacă este necesar
+
         insertInitialBooksIfEmpty(db);
     }
 

@@ -5,81 +5,92 @@ import static com.example.bookrent.AESCrypt.encrypt;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.widget.EditText;
-import android.widget.Button;
-import android.os.Bundle;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class MyDataBase extends SQLiteOpenHelper {
-    EditText email, password;
-    Button login, register;
+
+    private static final String DATABASE_NAME = "Signup.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String TABLE_USERS = "allusers";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PASSWORD = "password";
 
     public MyDataBase(@Nullable Context context) {
-        super(context, "Signup.db", null ,1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase MyDatabase) {
-        MyDatabase.execSQL("create Table allusers(email TEXT primary key, password TEXT)");
-
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
+                COLUMN_EMAIL + " TEXT PRIMARY KEY, " +
+                COLUMN_PASSWORD + " TEXT)");
     }
+
     @Override
-    public void onUpgrade(SQLiteDatabase MyDatabase, int i, int i1){
-        MyDatabase.execSQL("drop Table if exists allusers");
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Consider schema migration instead of dropping the table
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        onCreate(db);
     }
-    public Boolean insertData(String email, String password){
+
+    public boolean insertData(String email, String password) {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
         try {
-            password=encrypt(password) ;
+            password = encrypt(password);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Encryption error", e);
         }
-        SQLiteDatabase MyDatabase =this.getWritableDatabase();
-        ContentValues contentValues=new ContentValues();
-        contentValues.put("email", email);
-        contentValues.put("password", password);
-        long result=MyDatabase.insert("allusers", null,contentValues);
-        if(result==-1)
-        {return false;}
-        else
-        {return true;}
-
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_EMAIL, email);
+            contentValues.put(COLUMN_PASSWORD, password);
+            long result = db.insert(TABLE_USERS, null, contentValues);
+            return result != -1;
+        }
     }
-    public Boolean checkEmail(String email)
-    {
-        SQLiteDatabase MyDatabase = this.getWritableDatabase();
-        Cursor cursor= MyDatabase.rawQuery("Select * from allusers where email = ?", new String[]{email});
-        if (cursor.getCount() >0){return true;}
-        else {return false;}
 
+    public boolean checkEmail(String email) {
+        try (SQLiteDatabase db = this.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email})) {
+            return cursor.getCount() > 0;
+        }
     }
-    public Boolean checkEmailPassword( String email, @NonNull String password)
-    {
+
+    public boolean checkEmailPassword(String email, @NonNull String password) {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
         try {
-            password=encrypt(password) ;
+            password = encrypt(password);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Encryption error", e);
         }
-        SQLiteDatabase MyDatabase = this.getWritableDatabase();
-        Cursor cursor= MyDatabase.rawQuery("Select * from allusers where email = ? and password = ?", new String[]{email, password});
-        if(cursor.getCount()>0)
-        {return true;}
-        else
-        {return false;}
+        try (SQLiteDatabase db = this.getReadableDatabase();
+             Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?", new String[]{email, password})) {
+            return cursor.getCount() > 0;
+        }
+    }
 
-
+    public boolean updateData(String email, String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        try {
+            password = encrypt(password);
+        } catch (Exception e) {
+            throw new RuntimeException("Encryption error", e);
+        }
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_PASSWORD, password);
+            int result = db.update(TABLE_USERS, contentValues, COLUMN_EMAIL + " = ?", new String[]{email});
+            return result > 0;
+        }
     }
 }
