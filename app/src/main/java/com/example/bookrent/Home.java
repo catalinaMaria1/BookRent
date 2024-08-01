@@ -1,16 +1,15 @@
 package com.example.bookrent;
-import androidx.appcompat.app.ActionBar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.google.android.material.navigation.NavigationView;
 
 public class Home extends AppCompatActivity {
@@ -39,27 +38,18 @@ public class Home extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.home) {
-                    Intent intent = new Intent(Home.this, DisplayBooksActivity.class);
-                    startActivity(intent);
-                  } else if (itemId == R.id.account) {
-                    Intent intent=new Intent (Home.this, Account.class);
-                    startActivity(intent);
-                } else if (itemId == R.id.login)
-                    {
-                        Intent intent=new Intent(Home.this,LoginActivity.class);
-                        startActivity(intent);
-                     } else if (itemId == R.id.share) {
+                    startActivity(new Intent(Home.this, DisplayBooksActivity.class));
+                } else if (itemId == R.id.account) {
+                    startActivity(new Intent(Home.this, Account.class));
+                } else if (itemId == R.id.login) {
+                    startActivity(new Intent(Home.this, LoginActivity.class));
+                } else if (itemId == R.id.share) {
                     Toast.makeText(Home.this, "Share selected", Toast.LENGTH_SHORT).show();
-                }
-                else if(itemId==R.id.register)
-                {
-                    Intent intent=new Intent(Home.this,SignupActivity.class);
-                    startActivity(intent);
-                }
-                else {
+                } else if (itemId == R.id.register) {
+                    startActivity(new Intent(Home.this, SignupActivity.class));
+                } else {
                     return false;
-               }
-
+                }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }

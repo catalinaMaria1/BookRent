@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class BooksDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "books.db";
-    private static final int DATABASE_VERSION = 4; // Schimbă versiunea la 4
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_NAME_BOOKS = "books";
     public static final String COLUMN_ID = "_id";
@@ -85,7 +85,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_NAME_BOOKS, null, values);
     }
 
-    // Metodă care folosește baza de date curentă
+
     public void insertBook(String title, String image, String description, String author, String reviews) {
         SQLiteDatabase db = this.getWritableDatabase();
         insertBook(db, title, image, description, author, reviews);
