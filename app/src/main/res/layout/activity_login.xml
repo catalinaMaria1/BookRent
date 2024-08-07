@@ -87,14 +87,14 @@
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Logare"
+            android:text="Login"
             android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/registerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Înregistrare"
+            android:text="Sign Up"
             android:layout_marginStart="8dp" />
 
     </LinearLayout>
