@@ -48,7 +48,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("BooksDBHelper", "Upgrading database from version " + oldVersion + " to " + newVersion);
-        if (oldVersion < 5) { // Assuming version 5 is where the price column was added
+        if (oldVersion < 5) { 
             db.execSQL("ALTER TABLE " + TABLE_NAME_BOOKS + " ADD COLUMN " + COLUMN_PRICE + " REAL DEFAULT 0");
         }
 
