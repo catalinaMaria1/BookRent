@@ -14,10 +14,19 @@ import androidx.annotation.Nullable;
 public class MyDataBase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "Signup.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_USERS = "allusers";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
+
+    private static final String TABLE_CART_BOOKS = "cart_books";
+    private static final String COLUMN_BOOK_ID = "book_id";
+    private static final String COLUMN_BOOK_TITLE = "title";
+    private static final String COLUMN_BOOK_AUTHOR = "author";
+    private static final String COLUMN_BOOK_IMAGE = "image";
+    private static final String COLUMN_BOOK_DESCRIPTION = "description";
+    private static final String COLUMN_BOOK_REVIEWS = "reviews";
+    private static final String COLUMN_BOOK_PRICE = "price";
 
     public MyDataBase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,13 +37,29 @@ public class MyDataBase extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
                 COLUMN_EMAIL + " TEXT PRIMARY KEY, " +
                 COLUMN_PASSWORD + " TEXT)");
+
+        db.execSQL("CREATE TABLE " + TABLE_CART_BOOKS + " (" +
+                COLUMN_BOOK_ID + " INTEGER PRIMARY KEY, " +
+                COLUMN_BOOK_TITLE + " TEXT, " +
+                COLUMN_BOOK_AUTHOR + " TEXT, " +
+                COLUMN_BOOK_IMAGE + " TEXT, " +
+                COLUMN_BOOK_DESCRIPTION + " TEXT, " +
+                COLUMN_BOOK_REVIEWS + " TEXT, " +
+                COLUMN_BOOK_PRICE + " REAL)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Consider schema migration instead of dropping the table
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("CREATE TABLE " + TABLE_CART_BOOKS + " (" +
+                    COLUMN_BOOK_ID + " INTEGER PRIMARY KEY, " +
+                    COLUMN_BOOK_TITLE + " TEXT, " +
+                    COLUMN_BOOK_AUTHOR + " TEXT, " +
+                    COLUMN_BOOK_IMAGE + " TEXT, " +
+                    COLUMN_BOOK_DESCRIPTION + " TEXT, " +
+                    COLUMN_BOOK_REVIEWS + " TEXT, " +
+                    COLUMN_BOOK_PRICE + " REAL)");
+        }
     }
 
     public boolean insertData(String email, String password) {
@@ -92,5 +117,19 @@ public class MyDataBase extends SQLiteOpenHelper {
             int result = db.update(TABLE_USERS, contentValues, COLUMN_EMAIL + " = ?", new String[]{email});
             return result > 0;
         }
+    }
+    public void addBookToCart(Book book) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_BOOK_ID, book.getId());
+        contentValues.put(COLUMN_BOOK_TITLE, book.getTitle());
+        contentValues.put(COLUMN_BOOK_AUTHOR, book.getAuthor());
+        contentValues.put(COLUMN_BOOK_IMAGE, book.getImage());
+        contentValues.put(COLUMN_BOOK_DESCRIPTION, book.getDescription());
+        contentValues.put(COLUMN_BOOK_REVIEWS, book.getReviews());
+        contentValues.put(COLUMN_BOOK_PRICE, book.getPrice());
+
+        db.insert(TABLE_CART_BOOKS, null, contentValues);
+        db.close();
     }
 }

@@ -15,17 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Book> booksList;
     private final BooksDBHelper dbHelper;
+    private final MyDataBase myDataBase; // Reference to MyDataBase
 
     public BooksAdapter(Context context, List<Book> booksList, BooksDBHelper dbHelper) {
         this.context = context;
         this.booksList = booksList;
         this.dbHelper = dbHelper;
+        this.myDataBase = new MyDataBase(context); // Initialize MyDataBase
     }
 
     @NonNull
@@ -52,6 +53,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         holder.buttonAdd.setOnClickListener(v -> {
             dbHelper.addBookToCart(book.getId());
+            myDataBase.addBookToCart(book); // Add the book to MyDataBase as well
             Toast.makeText(context, "Book added to cart", Toast.LENGTH_SHORT).show();
         });
     }

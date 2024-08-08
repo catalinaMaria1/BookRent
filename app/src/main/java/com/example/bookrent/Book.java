@@ -9,7 +9,7 @@ public class Book {
     private String reviews;
     private double price;
 
-    // Constructor cu toți parametrii
+
     public Book(int id, String title, String image, String description, String author, String reviews, double price) {
         this.id = id;
         this.title = title;
@@ -23,6 +23,10 @@ public class Book {
     // Constructor fără preț
     public Book(int id, String title, String image, String description, String author, String reviews) {
         this(id, title, image, description, author, reviews, 0.0); // preț implicit 0.0
+    }
+    public Book( String title, double price) {
+        this.title = title;
+        this.price = price;
     }
 
     public int getId() {

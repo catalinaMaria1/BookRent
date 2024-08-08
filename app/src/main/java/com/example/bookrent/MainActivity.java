@@ -16,7 +16,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Button visitButton;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        checkLoginStatus();
+        checkLoginStatus();  // Call the method to check login status and navigate accordingly.
     }
 
     @Override
@@ -105,9 +104,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void checkLoginStatus() {
         if (isLog) {
-            Intent intent = new Intent(MainActivity.this, Books1.class);
-            startActivity(intent);
-            finish();
+            if (Objects.equals(username, "admin")) {
+                // Redirect to the Books1 activity if the user is an admin.
+                Intent intent = new Intent(MainActivity.this, Books1.class);
+                startActivity(intent);
+                finish();
+            } else {
+                // Redirect to HomeFragment if the user is not an admin.
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
 }
