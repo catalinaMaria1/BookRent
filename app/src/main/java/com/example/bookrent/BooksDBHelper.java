@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class BooksDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "books.db";
-    private static final int DATABASE_VERSION = 5; // Incremented the version
+    private static final int DATABASE_VERSION = 5;
 
     public static final String TABLE_NAME_BOOKS = "books";
     public static final String COLUMN_ID = "_id";
@@ -51,7 +51,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         if (oldVersion < 5) { // Assuming version 5 is where the price column was added
             db.execSQL("ALTER TABLE " + TABLE_NAME_BOOKS + " ADD COLUMN " + COLUMN_PRICE + " REAL DEFAULT 0");
         }
-        // Handle other upgrade paths if needed
+
     }
 
     private void insertInitialBooksIfEmpty(SQLiteDatabase db) {

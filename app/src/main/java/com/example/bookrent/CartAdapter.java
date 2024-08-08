@@ -44,7 +44,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         holder.textViewAuthor.setText("Author: " + book.getAuthor());
         holder.textViewDescription.setText("Description: " + book.getDescription());
         holder.textViewReviews.setText("Reviews: " + book.getReviews());
-        holder.textViewPrice.setText("Price: $" + book.getPrice()); // Show price
+        holder.textViewPrice.setText("Price: $" + book.getPrice());
 
         Glide.with(context)
                 .load(book.getImage())
