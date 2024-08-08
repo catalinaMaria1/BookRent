@@ -26,7 +26,7 @@ public class Books1 extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         editTextAuthor = findViewById(R.id.editTextAuthor);
         editTextReviews = findViewById(R.id.editTextReviews);
-        editTextPrice = findViewById(R.id.editTextPrice); // Added EditText for price
+        editTextPrice = findViewById(R.id.editTextPrice); 
         editTextEraseBook = findViewById(R.id.editTextEraseBook);
         buttonInsertBook = findViewById(R.id.buttonInsertBook);
         buttonEraseBook = findViewById(R.id.buttonEraseBook);
@@ -90,7 +90,7 @@ public class Books1 extends AppCompatActivity {
         editTextDescription.setText("");
         editTextAuthor.setText("");
         editTextReviews.setText("");
-        editTextPrice.setText(""); // Clear price field
-        editTextEraseBook.setText(""); // Clear erase book text field as well
+        editTextPrice.setText(""); 
+        editTextEraseBook.setText(""); 
     }
 }
