@@ -38,8 +38,8 @@ import java.util.Map;
 
 public class WalletFragment extends Fragment {
 
-    String Secret="sk_test_51PlTHpBjbVPIcwK8pRgVZgSfJjPLkjh4P0Cg3iRGoPPsXEgjT7bjfGx3ejKYBW8t0Aw6qypxYTOSOArSFqSycMT600uto3qHBc";
-    String Publish="pk_test_51PlTHpBjbVPIcwK8Uxs5BLVdMcuYxirJXSOU3HHXXlXjQCQ449lHkKiRUPidxMSzVXUBGEVQihzvUsqB55svvrCw006Bt4sfil";
+    String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
+    String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
 
     PaymentSheet paymentSheet;
 

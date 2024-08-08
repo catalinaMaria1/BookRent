@@ -27,12 +27,12 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_BOOKS_TABLE =
             "CREATE TABLE " + TABLE_NAME_BOOKS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_TITLE + " TEXT, " +
-                    COLUMN_IMAGE + " TEXT, " +
-                    COLUMN_DESCRIPTION + " TEXT, " +
-                    COLUMN_AUTHOR + " TEXT, " +
-                    COLUMN_REVIEWS + " TEXT, " +
-                    COLUMN_IN_CART + " INTEGER DEFAULT 0, " +
+                    COLUMN_TITLE + " TEXT," +
+                    COLUMN_IMAGE + " TEXT," +
+                    COLUMN_DESCRIPTION + " TEXT," +
+                    COLUMN_AUTHOR + " TEXT," +
+                    COLUMN_REVIEWS + " TEXT," +
+                    COLUMN_IN_CART + " INTEGER DEFAULT 0," +
                     COLUMN_PRICE + " REAL DEFAULT 0)"; // Add this line
 
     public BooksDBHelper(Context context) {
@@ -88,7 +88,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     public void insertBook(String title, String image, String description, String author, String reviews, double price) {
         SQLiteDatabase db = this.getWritableDatabase();
         insertBook(db, title, image, description, author, reviews, price);
-        db.close();
     }
 
     public void addBookToCart(int bookId) {
@@ -96,7 +95,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_IN_CART, 1); // Mark as in cart
         db.update(TABLE_NAME_BOOKS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
-        db.close();
     }
 
     public void removeBookFromCart(int bookId) {
@@ -104,7 +102,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_IN_CART, 0); // Mark as not in cart
         db.update(TABLE_NAME_BOOKS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
-        db.close();
     }
 
     public ArrayList<Book> getBooksInCart() {
@@ -130,7 +127,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        db.close();
 
         return booksList;
     }
@@ -148,7 +144,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                 String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
                 String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
-                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)); 
+                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE));
 
                 booksList.add(new Book(id, title, image, description, author, reviews, price));
             } while (cursor.moveToNext());
@@ -158,7 +154,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        db.close();
 
         return booksList;
     }
@@ -169,7 +164,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         String[] selectionArgs = { bookName };
 
         db.delete(TABLE_NAME_BOOKS, selection, selectionArgs);
-        db.close();
         return true;
     }
 }

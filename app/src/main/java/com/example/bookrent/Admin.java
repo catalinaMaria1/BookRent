@@ -1,7 +1,9 @@
-package com.example.bookrent;
+ package com.example.bookrent;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,90 +11,88 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.bookrent.databinding.ActivityAccountBinding;
+import com.example.bookrent.databinding.ActivityBooks1Binding;
+
 public class Admin extends Fragment {
 
     private BooksDBHelper dbHelper;
-    private EditText editTextTitle, editTextImage, editTextDescription, editTextAuthor, editTextPrice, editTextReviews, editTextEraseBook;
-    private Button buttonInsertBook, buttonEraseBook;
+    ActivityBooks1Binding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.activity_books1, container, false);
+        // Inflate the layout for this fragment
+        binding= ActivityBooks1Binding.inflate(inflater,container,false);
 
         dbHelper = new BooksDBHelper(getActivity());
 
-        editTextTitle = v.findViewById(R.id.editTextTitle);
-        editTextImage = v.findViewById(R.id.editTextImage);
-        editTextDescription = v.findViewById(R.id.editTextDescription);
-        editTextAuthor = v.findViewById(R.id.editTextAuthor);
-        editTextPrice = v.findViewById(R.id.editTextPrice);
-        editTextReviews = v.findViewById(R.id.editTextReviews);
-        editTextEraseBook = v.findViewById(R.id.editTextEraseBook);
-        buttonInsertBook = v.findViewById(R.id.buttonInsertBook);
-        buttonEraseBook = v.findViewById(R.id.buttonEraseBook);
 
-        buttonInsertBook.setOnClickListener(v1 -> insertBook());
+        binding.buttonInsertBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertBook();
+            }
+        });
 
-        buttonEraseBook.setOnClickListener(v12 -> eraseBook());
+        binding.buttonEraseBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eraseBook();
+            }
+        });
 
-        return v;
+        return binding.getRoot();
     }
 
     private void insertBook() {
-        String title = editTextTitle.getText().toString().trim();
-        String image = editTextImage.getText().toString().trim();
-        String description = editTextDescription.getText().toString().trim();
-        String author = editTextAuthor.getText().toString().trim();
-        String priceStr = editTextPrice.getText().toString().trim();
-        String reviews = editTextReviews.getText().toString().trim();
+        String title = binding.editTextTitle.getText().toString().trim();
+        String image = binding.editTextImage.getText().toString().trim();
+        String description = binding.editTextDescription.getText().toString().trim();
+        String author = binding.editTextAuthor.getText().toString().trim();
+        String reviews = binding.editTextReviews.getText().toString().trim();
+        Double price = Double.valueOf(binding.editTextPrice.getText().toString().trim());
 
         if (title.isEmpty()) {
-            editTextTitle.setError("Title is required!");
-            editTextTitle.requestFocus();
+            binding.editTextTitle.setError("Title is required!");
+            binding.editTextTitle.requestFocus();
             return;
         }
 
-        double price;
-        try {
-            price = Double.parseDouble(priceStr);
-        } catch (NumberFormatException e) {
-            editTextPrice.setError("Invalid price format!");
-            editTextPrice.requestFocus();
-            return;
-        }
-
-        dbHelper.insertBook(title, image, description, author, reviews,price);
+        dbHelper.insertBook(title,
+                image,
+                description,
+                author,
+                reviews,
+                price);
         clearFields();
         Toast.makeText(getActivity(), "Book inserted successfully!", Toast.LENGTH_SHORT).show();
     }
 
     private void eraseBook() {
-        String bookName = editTextEraseBook.getText().toString().trim();
+        String bookName = binding.editTextEraseBook.getText().toString().trim();
 
         if (bookName.isEmpty()) {
-            editTextEraseBook.setError("Book name is required!");
-            editTextEraseBook.requestFocus();
+            binding.editTextEraseBook.setError("Book name is required!");
+            binding.editTextEraseBook.requestFocus();
             return;
         }
 
         boolean result = dbHelper.eraseBook(bookName);
 
         if (result) {
-            Toast.makeText(getActivity(), "Book erased successfully!", Toast.LENGTH_SHORT).show();
-        } else {
             Toast.makeText(getActivity(), "Failed to erase book. Book not found", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Book erased successfully!.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void clearFields() {
-        editTextTitle.setText("");
-        editTextImage.setText("");
-        editTextDescription.setText("");
-        editTextAuthor.setText("");
-        editTextReviews.setText("");
-        editTextPrice.setText("");
-        editTextEraseBook.setText("");
+        binding.editTextTitle.setText("");
+        binding.editTextImage.setText("");
+        binding.editTextDescription.setText("");
+        binding.editTextReviews.setText("");
+        binding.editTextAuthor.setText("");
+        binding.editTextEraseBook.setText(""); // Clear erase book text field as well
     }
 }
