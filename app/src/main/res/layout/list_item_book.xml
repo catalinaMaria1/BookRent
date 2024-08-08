@@ -21,7 +21,6 @@
             android:queryHint="Search books..." />
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="wrap_content"
@@ -29,9 +28,7 @@
         android:orientation="vertical"
         android:layout_below="@id/searchContainer"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/imageViewCover"
-        android:layout_marginEnd="8dp"
-        android:layout_alignParentLeft="true">
+        android:layout_marginEnd="8dp">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -53,6 +50,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
             android:textSize="16sp" />
 
         <TextView

@@ -69,12 +69,21 @@
         android:padding="16dp"
         android:textSize="18sp"
         />
-
+<EditText
+    android:id="@+id/editTextPrice"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/editTextReviews"
+    android:layout_marginTop="10dp"
+    android:hint="Price"
+    android:inputType="numberDecimal"
+    android:padding="16dp"
+    android:textSize="18sp"/>
     <EditText
         android:id="@+id/editTextEraseBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextReviews"
+        android:layout_below="@+id/editTextPrice"
         android:layout_marginTop="10dp"
         android:hint="Book Name to Erase"
         android:inputType="text"
