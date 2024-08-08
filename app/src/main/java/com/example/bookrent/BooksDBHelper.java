@@ -33,7 +33,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                     COLUMN_AUTHOR + " TEXT," +
                     COLUMN_REVIEWS + " TEXT," +
                     COLUMN_IN_CART + " INTEGER DEFAULT 0," +
-                    COLUMN_PRICE + " REAL DEFAULT 0)"; // Add this line
+                    COLUMN_PRICE + " REAL DEFAULT 0)";
 
     public BooksDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,7 +48,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("BooksDBHelper", "Upgrading database from version " + oldVersion + " to " + newVersion);
-        if (oldVersion < 5) { 
+        if (oldVersion < 5) {
             db.execSQL("ALTER TABLE " + TABLE_NAME_BOOKS + " ADD COLUMN " + COLUMN_PRICE + " REAL DEFAULT 0");
         }
 
