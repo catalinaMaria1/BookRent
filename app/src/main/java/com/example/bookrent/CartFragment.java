@@ -47,14 +47,7 @@ public class CartFragment extends Fragment {
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                if(cont.bani <price)
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment()).addToBackStack(null).commit();
-
-                else{
-                    cont.bani=cont.bani-price sau idk cont.scadeBani(price)
-                }
-                 */
+               
 
             }
         });
