@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Books1 extends AppCompatActivity {
 
     private BooksDBHelper dbHelper;
-    private EditText editTextTitle, editTextImage, editTextDescription, editTextAuthor, editTextReviews, editTextPrice, editTextEraseBook;
+    private EditText editTextTitle, editTextImage, editTextDescription, editTextAuthor, editTextReviews, editTextPrice, editTextEraseBook, editTextCategory;
     private Button buttonInsertBook, buttonEraseBook;
 
     @Override
@@ -26,7 +26,8 @@ public class Books1 extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         editTextAuthor = findViewById(R.id.editTextAuthor);
         editTextReviews = findViewById(R.id.editTextReviews);
-        editTextPrice = findViewById(R.id.editTextPrice); 
+        editTextPrice = findViewById(R.id.editTextPrice);
+        editTextCategory=findViewById(R.id.editTextCategory);
         editTextEraseBook = findViewById(R.id.editTextEraseBook);
         buttonInsertBook = findViewById(R.id.buttonInsertBook);
         buttonEraseBook = findViewById(R.id.buttonEraseBook);
@@ -44,7 +45,7 @@ public class Books1 extends AppCompatActivity {
         String reviews = editTextReviews.getText().toString().trim();
         String priceString = editTextPrice.getText().toString().trim();
         double price = 0.0;
-
+        String category= editTextCategory.getText().toString().trim();
         if (!priceString.isEmpty()) {
             try {
                 price = Double.parseDouble(priceString);
@@ -61,7 +62,7 @@ public class Books1 extends AppCompatActivity {
             return;
         }
 
-        dbHelper.insertBook(title, image, description, author, reviews, price);
+        dbHelper.insertBook(title, image, description, author, reviews, price,category);
         clearFields();
         Toast.makeText(this, "Book inserted successfully!", Toast.LENGTH_SHORT).show();
     }
@@ -90,7 +91,8 @@ public class Books1 extends AppCompatActivity {
         editTextDescription.setText("");
         editTextAuthor.setText("");
         editTextReviews.setText("");
-        editTextPrice.setText(""); 
+        editTextPrice.setText("");
+        editTextCategory.setText("");
         editTextEraseBook.setText(""); 
     }
 }

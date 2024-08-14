@@ -30,6 +30,8 @@ import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
 
+import static com.example.bookrent.MainActivity.user;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,15 +40,16 @@ import java.util.Map;
 
 public class WalletFragment extends Fragment {
 
-    String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
-    String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
+    private String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
+    private String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
 
-    PaymentSheet paymentSheet;
+    private PaymentSheet paymentSheet;
 
-    String customerID;
-    String EphericalKey;
-    String ClientSecret;
-    String amount;
+    private String customerID;
+    private String EphericalKey;
+    private String ClientSecret;
+    private String amount;
+    private MyDataBase dataBase;
 
     ActivityWalletBinding binding;
 
@@ -75,6 +78,7 @@ public class WalletFragment extends Fragment {
         Button button = binding.addMoney;
         EditText text = binding.moneyField;
         text.setInputType(InputType.TYPE_CLASS_NUMBER);
+        dataBase=new MyDataBase(getActivity());
 
         button.setOnClickListener(view1 -> {
             amount = String.valueOf(text.getText());
@@ -84,6 +88,14 @@ public class WalletFragment extends Fragment {
         // Fetch data after everything is set up
     }
 
+    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
+        if(paymentSheetResult instanceof PaymentSheetResult.Completed){
+            Toast.makeText(getContext(),"payment succeful",Toast.LENGTH_SHORT).show();
+            float money=Float.valueOf(amount)+user.getAmount();
+            user.setAmount(money);
+            dataBase.updateMoney(String.valueOf(user.getId()),money);
+        }
+    }
     private void fetchData(String amount){
 
 
@@ -120,12 +132,6 @@ public class WalletFragment extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
-        if(paymentSheetResult instanceof PaymentSheetResult.Completed){
-            Toast.makeText(getContext(),"payment succeful",Toast.LENGTH_SHORT).show();
-
-        }
-    }
 
     private void getEphericalKey(String customerID){
         StringRequest stringRequest= new StringRequest(Request.Method.POST,

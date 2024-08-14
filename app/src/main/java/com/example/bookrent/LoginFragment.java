@@ -10,8 +10,9 @@ import android.widget.Toast;
 
 import com.example.bookrent.databinding.ActivityLoginBinding;
 import com.example.bookrent.databinding.ActivitySignupBinding;
-import static com.example.bookrent.MainActivity.isLog;
-import static com.example.bookrent.MainActivity.username;
+import static com.example.bookrent.MainActivity.user;
+
+import java.util.Objects;
 
 public class LoginFragment extends Fragment {
     ActivityLoginBinding binding;
@@ -33,11 +34,12 @@ public class LoginFragment extends Fragment {
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getActivity(), "All fields are mandatory", Toast.LENGTH_SHORT).show();
                 } else {
-                    boolean checkCredentials = databaseHelper.checkEmailPassword(email, password);
-                    if (checkCredentials) {
+                    User checkCredentials = databaseHelper.checkEmailPassword(email, password);
+                    if (checkCredentials.getId() !=  -1 ) {
                         Toast.makeText(getActivity(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                        MainActivity.isLog=true;
-                        MainActivity.username=email;
+                        MainActivity.user.setId(checkCredentials.getId());
+                        MainActivity.user.setEmail(checkCredentials.getEmail());
+                        MainActivity.user.setAmount(checkCredentials.getAmount());
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
                     } else {

@@ -14,19 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.BreakIterator;
 import java.util.List;
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Book> booksList;
     private final BooksDBHelper dbHelper;
-    private final MyDataBase myDataBase; // Reference to MyDataBase
+    private final MyDataBase myDataBase;
 
     public BooksAdapter(Context context, List<Book> booksList, BooksDBHelper dbHelper) {
         this.context = context;
         this.booksList = booksList;
         this.dbHelper = dbHelper;
-        this.myDataBase = new MyDataBase(context); // Initialize MyDataBase
+        this.myDataBase = new MyDataBase(context);
     }
 
     @NonNull
@@ -43,7 +44,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.textViewAuthor.setText("Author: " + book.getAuthor());
         holder.textViewDescription.setText("Description: " + book.getDescription());
         holder.textViewReviews.setText("Reviews: " + book.getReviews());
-        holder.textViewPrice.setText("Price: $" + book.getPrice()); // Show price
+        holder.textViewPrice.setText("Price: $" + book.getPrice());
+        holder.textViewCategory.setText("Category: " + book.getCategory());
 
         Glide.with(context)
                 .load(book.getImage())
@@ -53,7 +55,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
         holder.buttonAdd.setOnClickListener(v -> {
             dbHelper.addBookToCart(book.getId());
-            myDataBase.addBookToCart(book); // Add the book to MyDataBase as well
+            myDataBase.addBookToCart(book);
             Toast.makeText(context, "Book added to cart", Toast.LENGTH_SHORT).show();
         });
     }
@@ -62,9 +64,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     public int getItemCount() {
         return booksList != null ? booksList.size() : 0;
     }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle, textViewAuthor, textViewDescription, textViewReviews, textViewPrice;
+        TextView textViewTitle, textViewAuthor, textViewDescription, textViewReviews, textViewPrice, textViewCategory;
         ImageView imageViewCover;
         Button buttonAdd;
 
@@ -74,11 +75,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
             textViewAuthor = itemView.findViewById(R.id.textViewAuthor);
             textViewDescription = itemView.findViewById(R.id.textViewDescription);
             textViewReviews = itemView.findViewById(R.id.textViewReviews);
-            textViewPrice = itemView.findViewById(R.id.textViewPrice); // Added price TextView
+            textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            textViewCategory = itemView.findViewById(R.id.textViewCategory);
             imageViewCover = itemView.findViewById(R.id.imageViewCover);
             buttonAdd = itemView.findViewById(R.id.buttonAdd);
         }
     }
+
 
     public void updateBooks(List<Book> updatedBooksList) {
         booksList.clear();

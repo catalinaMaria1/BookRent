@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import static com.example.bookrent.MainActivity.isLog;
-import static com.example.bookrent.MainActivity.username;
+import static com.example.bookrent.MainActivity.user;
 
 public class AccountFragment extends Fragment {
     @Override
@@ -26,8 +26,18 @@ public class AccountFragment extends Fragment {
         Button cart = view.findViewById(R.id.account_cart);
         Button wallet = view.findViewById(R.id.account_wallet);
         Button logout = view.findViewById(R.id.account_logout);
+        TextView moneyText=view.findViewById(R.id.moneyAmount);
 
-        emailTextView.setText(username);
+
+        try{
+
+            emailTextView.setText(user.getEmail());
+            moneyText.setText(String.valueOf(user.getAmount())+" RON");
+        }
+        catch (Exception e){
+            Toast.makeText(getActivity(),"Error, not Logged in", Toast.LENGTH_SHORT).show();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).addToBackStack(null).commit();
+        }
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,9 +63,7 @@ public class AccountFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Clear login state
-                isLog = false;
-                username = null;
+                user=new User();
 
                 // Navigate to home screen
                 Intent intent = new Intent(getActivity(), MainActivity.class);

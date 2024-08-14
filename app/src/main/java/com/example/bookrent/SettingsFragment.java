@@ -41,12 +41,10 @@ public class SettingsFragment extends Fragment {
             return insets;
         });
 
-        // Set up the save button click listener
         buttonSave.setOnClickListener(v -> {
             String newEmail = editTextEmail.getText().toString().trim();
             String newPassword = editTextPassword.getText().toString().trim();
 
-            // Validate inputs
             if (newEmail.isEmpty() || newPassword.isEmpty()) {
                 Toast.makeText(getActivity(), "Please fill out both fields", Toast.LENGTH_SHORT).show();
                 return;
@@ -58,6 +56,7 @@ public class SettingsFragment extends Fragment {
                     boolean updateSuccessful = myDataBase.updateData(newEmail, newPassword);
                     if (updateSuccessful) {
                         Toast.makeText(getActivity(), "Account updated successfully", Toast.LENGTH_SHORT).show();
+                        MainActivity.user.setEmail(newEmail);
                     } else {
                         Toast.makeText(getActivity(), "Error updating account", Toast.LENGTH_SHORT).show();
                     }

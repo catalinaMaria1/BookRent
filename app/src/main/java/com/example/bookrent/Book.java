@@ -8,9 +8,10 @@ public class Book {
     private String author;
     private String reviews;
     private double price;
+    private String category;
 
 
-    public Book(int id, String title, String image, String description, String author, String reviews, double price) {
+    public Book(int id, String title, String image, String description, String author, String reviews, double price,String category) {
         this.id = id;
         this.title = title;
         this.image = image;
@@ -18,11 +19,12 @@ public class Book {
         this.author = author;
         this.reviews = reviews;
         this.price = price;
+        this.category=category;
+
     }
 
-    // Constructor fără preț
-    public Book(int id, String title, String image, String description, String author, String reviews) {
-        this(id, title, image, description, author, reviews, 0.0); // preț implicit 0.0
+    public Book(int id, String title, String image, String description, String author, String reviews,String category) {
+        this(id, title, image, description, author, reviews, 0.0,category);
     }
     public Book( String title, double price) {
         this.title = title;
@@ -64,4 +66,7 @@ public class Book {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public String getCategory(){return category;}
+    public void setCategory(String category){this.category=category;}
 }

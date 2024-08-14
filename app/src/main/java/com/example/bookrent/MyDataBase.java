@@ -1,5 +1,6 @@
 package com.example.bookrent;
 
+import static android.app.PendingIntent.getActivity;
 import static com.example.bookrent.AESCrypt.encrypt;
 
 import android.content.ContentValues;
@@ -7,6 +8,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,7 @@ public class MyDataBase extends SQLiteOpenHelper {
     private static final String TABLE_USERS = "allusers";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_AMOUNT= "amount";
 
     private static final String TABLE_CART_BOOKS = "cart_books";
     private static final String COLUMN_BOOK_ID = "book_id";
@@ -35,8 +39,11 @@ public class MyDataBase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
-                COLUMN_EMAIL + " TEXT PRIMARY KEY, " +
-                COLUMN_PASSWORD + " TEXT)");
+                "ID" + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+
+                COLUMN_EMAIL + " TEXT, " +
+                COLUMN_PASSWORD + " TEXT, "+
+                COLUMN_AMOUNT + " REAL)"
+        );
 
         db.execSQL("CREATE TABLE " + TABLE_CART_BOOKS + " (" +
                 COLUMN_BOOK_ID + " INTEGER PRIMARY KEY, " +
@@ -62,7 +69,7 @@ public class MyDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public boolean insertData(String email, String password) {
+    public User insertData(String email, String password) {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
@@ -75,8 +82,19 @@ public class MyDataBase extends SQLiteOpenHelper {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_EMAIL, email);
             contentValues.put(COLUMN_PASSWORD, password);
+            contentValues.put(COLUMN_AMOUNT, 0.0);
             long result = db.insert(TABLE_USERS, null, contentValues);
-            return result != -1;
+            User data=new User();
+            if(result != -1){
+                Cursor cursor=db.rawQuery("SELECT * FROM "+ TABLE_USERS+ " WHERE "+ COLUMN_EMAIL + " = ?", new String[]{email});
+                if(cursor.moveToFirst()){
+                    data.setId(cursor.getInt(0));
+                    data.setEmail(cursor.getString(1));
+                    data.setAmount(cursor.getFloat(3));
+                }
+
+            }
+            return data;
         }
     }
 
@@ -87,7 +105,7 @@ public class MyDataBase extends SQLiteOpenHelper {
         }
     }
 
-    public boolean checkEmailPassword(String email, @NonNull String password) {
+    public User checkEmailPassword(String email, @NonNull String password) {
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
         }
@@ -98,8 +116,27 @@ public class MyDataBase extends SQLiteOpenHelper {
         }
         try (SQLiteDatabase db = this.getReadableDatabase();
              Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?", new String[]{email, password})) {
-            return cursor.getCount() > 0;
+            User data=new User();
+            data.setId(-1);
+            if(cursor.moveToFirst()){
+                Log.d("CURSOR",cursor.toString());
+                data.setId(cursor.getInt(0));
+                data.setEmail(cursor.getString(1));
+                data.setAmount(cursor.getFloat(3));
+                Log.d("CURSORUL",data.toString());
+            }
+
+            return data;
         }
+    }
+    public void updateMoney(String id, float amount){
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_AMOUNT, amount);
+
+            db.update(TABLE_USERS, contentValues, "ID = ?",new String[]{(id)});
+        }
+
     }
 
     public boolean updateData(String email, String password) {

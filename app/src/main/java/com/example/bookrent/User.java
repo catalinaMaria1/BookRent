@@ -1,18 +1,22 @@
 package com.example.bookrent;
 
 public class User {
-    private int id;
+    private int id =-1;
     private String fullname;
     private String password;
     private String email;
+    private float amount;
     private String bio;
 
-    public User(int id, String fullname, String password, String email, String bio) {
+    public User(int id, String fullname, String email, String bio) {
         this.id = id;
         this.fullname = fullname;
-        this.password = password;
         this.email = email;
         this.bio = bio;
+    }
+
+    public User() {
+
     }
 
     @Override
@@ -20,7 +24,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", fullname='" + fullname + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", bio='" + bio + '\'' +
                 '}';
@@ -46,6 +49,10 @@ public class User {
         this.bio = bio;
     }
 
+    public void setAmount(float amount) {
+        this.amount=amount;
+    }
+
     public String getFullname() {
         return fullname;
     }
@@ -65,4 +72,8 @@ public class User {
     public String getBio() {
         return bio;
     }
+    public Float getAmount(){
+        return amount;
+    }
+
 }

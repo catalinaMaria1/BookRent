@@ -52,6 +52,7 @@ public class Admin extends Fragment {
         String author = binding.editTextAuthor.getText().toString().trim();
         String reviews = binding.editTextReviews.getText().toString().trim();
         Double price = Double.valueOf(binding.editTextPrice.getText().toString().trim());
+        String category=binding.editTextCategory.getText().toString().trim();
 
         if (title.isEmpty()) {
             binding.editTextTitle.setError("Title is required!");
@@ -64,7 +65,7 @@ public class Admin extends Fragment {
                 description,
                 author,
                 reviews,
-                price);
+                price,category);
         clearFields();
         Toast.makeText(getActivity(), "Book inserted successfully!", Toast.LENGTH_SHORT).show();
     }
@@ -93,6 +94,7 @@ public class Admin extends Fragment {
         binding.editTextDescription.setText("");
         binding.editTextReviews.setText("");
         binding.editTextAuthor.setText("");
-        binding.editTextEraseBook.setText(""); // Clear erase book text field as well
+        binding.editTextCategory.setText("");
+        binding.editTextEraseBook.setText("");
     }
 }

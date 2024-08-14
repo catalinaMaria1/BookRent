@@ -37,9 +37,12 @@ public class SignupFragment extends Fragment {
                     if (password.equals(confirmPassword)) {
                         Boolean checkUserEmail = databaseHelper.checkEmail(email);
                         if (!checkUserEmail) {
-                            Boolean insert = databaseHelper.insertData(email, password);
-                            if (insert) {
+                            User data = databaseHelper.insertData(email, password);
+                            if (data !=null) {
                                 Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_SHORT).show();
+                                MainActivity.user.setId(data.getId());
+                                MainActivity.user.setEmail(data.getEmail());
+                                MainActivity.user.setAmount(data.getAmount());
                                 // Navigate to LoginFragment after successful registration
                                 getFragmentManager().beginTransaction()
                                         .replace(R.id.fragment_container, new LoginFragment())

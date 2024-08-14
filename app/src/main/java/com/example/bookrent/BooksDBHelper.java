@@ -22,7 +22,8 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_AUTHOR = "author";
     public static final String COLUMN_REVIEWS = "reviews";
     public static final String COLUMN_IN_CART = "in_cart";
-    public static final String COLUMN_PRICE = "price"; // New column
+    public static final String COLUMN_PRICE = "price";
+    public static final String COLUMN_CATEGORY = "category";
 
     private static final String SQL_CREATE_BOOKS_TABLE =
             "CREATE TABLE " + TABLE_NAME_BOOKS + " (" +
@@ -33,7 +34,8 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                     COLUMN_AUTHOR + " TEXT," +
                     COLUMN_REVIEWS + " TEXT," +
                     COLUMN_IN_CART + " INTEGER DEFAULT 0," +
-                    COLUMN_PRICE + " REAL DEFAULT 0)";
+                    COLUMN_PRICE + " REAL DEFAULT 0," +
+                    COLUMN_CATEGORY + " TEXT" + ");";
 
     public BooksDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,13 +68,13 @@ public class BooksDBHelper extends SQLiteOpenHelper {
 
     private void insertInitialBooks(SQLiteDatabase db) {
         Log.d("BooksDBHelper", "Inserting initial books");
-        insertBook(db, "Book Title 1", "image_url_1", "Description 1", "Author 1", "Reviews 1", 10.0);
-        insertBook(db, "Book Title 2", "image_url_2", "Description 2", "Author 2", "Reviews 2", 15.0);
-        insertBook(db, "Book Title 3", "image_url_3", "Description 3", "Author 3", "Reviews 3", 20.0);
-        insertBook(db, "Cat timp infloresc lamaii", "android.resource://com.example.bookrent/drawable/cat_timp_infloresc_lamaii", "Description 1", "Author 1", "Reviews 1", 25.0);
+        insertBook(db, "Book Title 1", "image_url_1", "Description 1", "Author 1", "Reviews 1", 10.0, "Category");
+        insertBook(db, "Wilder", "android.resource://com.example.bookrent/drawable/wilder", "Rebecca Yarros, autoare de bestsellere #1 New York Times și a fenomenului Fourth Wing, invită cititorii într-o croazieră tumultuoasă de nouă luni, pe parcursul căreia protagoniștii se luptă din răsputeri să nu-i ia valul.", "Rebecca Yarros", "5/5", 39.99,"Fiction");
+        insertBook(db, "Twisted Hate", "android.resource://com.example.bookrent/drawable/twisted", "Superb si arogant, Josh Chen se pregateste sa devina medic. Pana acum, n-a intalnit nicio fata care sa-i reziste — cu exceptia afurisitei de Jules Ambrose. Inca de cand s-au cunoscut, frumoasa roscata i-a fost ca un ghimpe in coasta, dar in acelasi timp Jules il obsedeaza asa cum nimeni alta n-a reusit.", "Ana Huang", "4/5", 37.45,"Romance");
+        insertBook(db, "Cat timp infloresc lamaii", "android.resource://com.example.bookrent/drawable/cat_timp_infloresc_lamaii", "Description 1", "Author 1", "Reviews 1", 25.0,"Category");
     }
 
-    public void insertBook(SQLiteDatabase db, String title, String image, String description, String author, String reviews, double price) {
+    public void insertBook(SQLiteDatabase db, String title, String image, String description, String author, String reviews, double price, String category) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, title);
         values.put(COLUMN_IMAGE, image);
@@ -81,13 +83,13 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_REVIEWS, reviews);
         values.put(COLUMN_IN_CART, 0);
         values.put(COLUMN_PRICE, price);
-
+        values.put(COLUMN_CATEGORY,category);
         db.insert(TABLE_NAME_BOOKS, null, values);
     }
 
-    public void insertBook(String title, String image, String description, String author, String reviews, double price) {
+    public void insertBook(String title, String image, String description, String author, String reviews, double price, String category) {
         SQLiteDatabase db = this.getWritableDatabase();
-        insertBook(db, title, image, description, author, reviews, price);
+        insertBook(db, title, image, description, author, reviews, price,category);
     }
 
     public void addBookToCart(int bookId) {
@@ -118,8 +120,9 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
                 String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
                 double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE));
+                String category=cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY));
 
-                booksList.add(new Book(id, title, image, description, author, reviews, price));
+                booksList.add(new Book(id, title, image, description, author, reviews, price,category));
             } while (cursor.moveToNext());
         }
 
@@ -145,8 +148,9 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
                 String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
                 double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE));
+                String category=cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY));
 
-                booksList.add(new Book(id, title, image, description, author, reviews, price));
+                booksList.add(new Book(id, title, image, description, author, reviews, price,category));
             } while (cursor.moveToNext());
         }
 

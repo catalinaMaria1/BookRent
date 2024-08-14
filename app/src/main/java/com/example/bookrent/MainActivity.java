@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,8 +22,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Button visitButton;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    public static boolean isLog;
-    public static String username;
+    public static User user=new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         visitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isLog && Objects.equals(username, "admin")) {
+                if (user !=null && user.getId()==1) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new Admin())
                             .addToBackStack(null)
@@ -83,10 +83,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 break;
             case R.id.nav_account:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new AccountFragment())
-                        .addToBackStack(null)
-                        .commit();
+                try{
+                    if(user.getId() !=-1)
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new AccountFragment())
+                                .addToBackStack(null)
+                                .commit();
+                    else{
+                        Toast.makeText(this, "Not Logged In!", Toast.LENGTH_SHORT).show();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new LoginFragment())
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                }
+                catch (Exception e){
+
+                    Toast.makeText(this, "Not Logged In!", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new LoginFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -103,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void checkLoginStatus() {
-        if (isLog) {
-            if (Objects.equals(username, "admin")) {
+        if (user!=null) {
+            if (Objects.equals(user.getId(), 1)) {
                 // Redirect to the Books1 activity if the user is an admin.
                 Intent intent = new Intent(MainActivity.this, Books1.class);
                 startActivity(intent);

@@ -49,7 +49,6 @@ public class CartFragment extends Fragment {
             public void onClick(View view) {
                 /*
                 if(cont.bani <price)
-                bani bani bani baga bani bani wowowowo
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, new WalletFragment()).addToBackStack(null).commit();
 
                 else{
