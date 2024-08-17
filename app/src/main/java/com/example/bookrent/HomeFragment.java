@@ -1,9 +1,13 @@
 package com.example.bookrent;
 
+import static com.example.bookrent.MainActivity.user;
+
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerViewBooks;
     private BooksAdapter booksAdapter;
     private BooksDBHelper dbHelper;
+    private MyDataBase myDataBase;
+    ArrayList<Book> ownedBooks;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,9 +29,13 @@ public class HomeFragment extends Fragment {
         recyclerViewBooks.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         dbHelper = new BooksDBHelper(getActivity());
+        myDataBase = new MyDataBase(getActivity());
         ArrayList<Book> booksList = dbHelper.getAllBooks();
 
-        booksAdapter = new BooksAdapter(getActivity(), booksList, dbHelper);
+        ownedBooks=user.getOwnedBooks();
+
+        booksAdapter = new BooksAdapter(getActivity(), booksList, myDataBase);
+        booksAdapter.updateBooks(ownedBooks);
         recyclerViewBooks.setAdapter(booksAdapter);
         return view;
     }

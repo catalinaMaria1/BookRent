@@ -3,20 +3,21 @@ package com.example.bookrent;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.bookrent.databinding.ActivityLoginBinding;
-import com.example.bookrent.databinding.ActivitySignupBinding;
 import static com.example.bookrent.MainActivity.user;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class LoginFragment extends Fragment {
     ActivityLoginBinding binding;
     MyDataBase databaseHelper;
+    BooksDBHelper booksDBHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,6 +25,7 @@ public class LoginFragment extends Fragment {
         binding  = ActivityLoginBinding.inflate(inflater, container, false);
 
         databaseHelper = new MyDataBase(getActivity());
+        booksDBHelper= new BooksDBHelper(getActivity());
 
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,9 +39,19 @@ public class LoginFragment extends Fragment {
                     User checkCredentials = databaseHelper.checkEmailPassword(email, password);
                     if (checkCredentials.getId() !=  -1 ) {
                         Toast.makeText(getActivity(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                        MainActivity.user.setId(checkCredentials.getId());
-                        MainActivity.user.setEmail(checkCredentials.getEmail());
-                        MainActivity.user.setAmount(checkCredentials.getAmount());
+                        user.setId(checkCredentials.getId());
+                        user.setEmail(checkCredentials.getEmail());
+                        user.setAmount(checkCredentials.getAmount());
+                        ArrayList<Book> owned=new ArrayList<Book>();
+                        String[] ids=databaseHelper.getBooksOwned(String.valueOf(user.getId()));
+                        if(ids[0]!="not found!" && !ids[0].isEmpty())
+                            for(int i=0;i<ids.length;i++){
+                                Book b=booksDBHelper.getBook(ids[i]);
+                                owned.add(b);
+                            }
+                        user.setOwnedBooks(owned);
+
+
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
                     } else {

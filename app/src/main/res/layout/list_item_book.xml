@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <!-- Container pentru informațiile despre carte -->
+
     <LinearLayout
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
             android:src="@drawable/placeholder" />
     </LinearLayout>
 
-    <!-- Butonul pentru adăugare carte -->
+
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"

@@ -1,32 +1,25 @@
 package com.example.bookrent;
 
+import java.util.ArrayList;
+
 public class User {
     private int id =-1;
     private String fullname;
-    private String password;
     private String email;
     private float amount;
-    private String bio;
+    private ArrayList<Book> cart;
+    private ArrayList<Book> ownedBooks= new ArrayList<>();
 
-    public User(int id, String fullname, String email, String bio) {
+    public User(int id, String fullname, String email, ArrayList<Book> cart, ArrayList<Book> ownedBooks) {
         this.id = id;
         this.fullname = fullname;
         this.email = email;
-        this.bio = bio;
+        this.cart = cart;
+        this.ownedBooks=ownedBooks;
     }
 
     public User() {
 
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", fullname='" + fullname + '\'' +
-                ", email='" + email + '\'' +
-                ", bio='" + bio + '\'' +
-                '}';
     }
 
     public void setFullname(String fullname) {
@@ -37,41 +30,43 @@ public class User {
         this.id = id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
 
     public void setAmount(float amount) {
         this.amount=amount;
     }
 
-    public String getFullname() {
-        return fullname;
+    public void setCart(ArrayList<Book> data){this.cart=data;}
+
+    public void setOwnedBooks(ArrayList<Book> data){this.ownedBooks.clear(); this.ownedBooks.addAll(data);}
+
+    public void removeFromCart(Book b){
+        this.cart.remove(b);
     }
+
+    public void clearCart(){this.ownedBooks.clear();}
+
+    public String getFullname() { return fullname; }
 
     public int getId() {
         return id;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getBio() {
-        return bio;
+    public ArrayList<Book> getCart() {
+        return cart;
     }
+
+    public ArrayList<Book> getOwnedBooks(){
+        return ownedBooks;
+    }
+
     public Float getAmount(){
         return amount;
     }

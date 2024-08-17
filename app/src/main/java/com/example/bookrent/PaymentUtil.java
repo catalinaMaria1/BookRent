@@ -1,21 +1,8 @@
 package com.example.bookrent;
 
-
-import static com.example.bookrent.MainActivity.user;
-
-import android.os.Bundle;
+import android.app.Activity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -24,112 +11,54 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
-import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CartFragment extends Fragment {
-
-    private String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
-    private String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
-
+public class PaymentUtil{
+    private String amount;
     private PaymentSheet paymentSheet;
+    private Activity activity;
+
+
+    public PaymentUtil(Activity activity){
+        this.activity=activity;
+    }
+    public void setAmount(String amount){
+        if(amount.contains(".0")){
+            amount=amount.replace(".","0");
+        }
+        else if(amount.contains(",")){
+            amount=amount.replace(",","");
+        }
+        else if(amount.contains(".")){
+            amount=amount.replace(".","");
+        }
+        else{
+            amount=amount+"00";
+        }
+        Log.w("Amount",amount);
+        this.amount=amount;
+
+    }
+    public void setPaymentSheet(PaymentSheet paymentSheet){
+        this.paymentSheet=paymentSheet;
+    }
+
+    public String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
+    public String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
 
     private String customerID;
     private String EphericalKey;
     private String ClientSecret;
 
-    private RecyclerView recyclerViewCart;
-    private CartAdapter cartAdapter;
-    private MyDataBase dbHelper;
-    private BooksDBHelper booksDBHelper;
-    private String amount;
-    private Button buy;
-    private float price = 0.0F;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        PaymentConfiguration.init(getContext(),Publish);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_cart, container, false);
-
-        buy = view.findViewById(R.id.purchaseButton);
-
-        paymentSheet=new PaymentSheet(this, paymentSheetResult -> onPaymentResult(paymentSheetResult,price - user.getAmount()));
-
-        recyclerViewCart = view.findViewById(R.id.recyclerViewCart);
-        recyclerViewCart.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        dbHelper = new MyDataBase(getActivity());
-        booksDBHelper=new BooksDBHelper(getActivity());
-
-        ArrayList<Book> booksInCart=new ArrayList<Book>();
-        String[] idList=dbHelper.getList(String.valueOf(user.getId()));
-        if(idList[0]!="not found!" &&  !idList[0].isEmpty()){
-            for(int i=0;i<idList.length;i++){
-                Book b=booksDBHelper.getBook(idList[i]);
-                booksInCart.add(b);
-            }
-        }
-        Log.w("BooksInCart", String.valueOf(booksInCart.stream().count()));
-        user.setCart(booksInCart);
-
-        cartAdapter = new CartAdapter(getActivity(), booksInCart, dbHelper);
-        recyclerViewCart.setAdapter(cartAdapter);
-
-        booksInCart.forEach(book -> {
-            price += book.getPrice();
-        });
-
-        buy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(price>user.getAmount()){
-                    String m=String.valueOf(price-user.getAmount());
-                    if(m.contains(".")){
-                        m=m.replace(".","");
-                    }
-                    else{
-                        m=m+"00";
-                    }
-                    amount=m;
-                    Log.d("Amount",amount);
-                    fetchData(amount);
-                }
-                else{
-                    Toast.makeText(getContext(), "Buying functionality not implemented yet!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        });
 
 
-        Toast.makeText(getContext(), "Total Price: $" + String.valueOf(price), Toast.LENGTH_SHORT).show();
-
-
-        return view;
-    }
-
-    private void onPaymentResult(PaymentSheetResult paymentSheetResult,float money) {
-        if(paymentSheetResult instanceof PaymentSheetResult.Completed){
-            Toast.makeText(getContext(),"payment succeful",Toast.LENGTH_SHORT).show();
-            user.setAmount(money);
-            dbHelper.updateMoney(String.valueOf(user.getId()),money);
-        }
-    }
-    private void fetchData(String amount){
+    public void fetchData(){
 
 
 
@@ -161,7 +90,7 @@ public class CartFragment extends Fragment {
                 return header;
             }
         };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue= Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
     }
 
@@ -176,7 +105,7 @@ public class CartFragment extends Fragment {
                             JSONObject object=new JSONObject(response);
                             EphericalKey=object.getString("id");
 
-                            getClientSecret(customerID, EphericalKey);
+                            getClientSecret(customerID);
                         }
                         catch (JSONException e){
                             e.printStackTrace();
@@ -186,7 +115,7 @@ public class CartFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Toast.makeText(getActivity(),"ERROR",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,"ERROR",Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -205,12 +134,12 @@ public class CartFragment extends Fragment {
                 return params;
             }
         };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue= Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
 
     }
 
-    private void getClientSecret(String customerID, String ephericalKey) {
+    private void getClientSecret(String customerID) {
         StringRequest stringRequest= new StringRequest(Request.Method.POST,
                 "https://api.stripe.com/v1/payment_intents",
                 new Response.Listener<String>() {
@@ -220,7 +149,7 @@ public class CartFragment extends Fragment {
                             JSONObject object=new JSONObject(response);
                             ClientSecret=object.getString("client_secret");
 
-                            Toast.makeText(getActivity(),ClientSecret,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity,ClientSecret,Toast.LENGTH_SHORT).show();
 
                             PaymentFlow();
 
@@ -232,7 +161,7 @@ public class CartFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),String.valueOf(error),Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,String.valueOf(error),Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -253,7 +182,7 @@ public class CartFragment extends Fragment {
                 return params;
             }
         };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue= Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
     }
 
@@ -265,4 +194,5 @@ public class CartFragment extends Fragment {
                 ))
         );
     }
+
 }

@@ -37,20 +37,14 @@ public class SignupFragment extends Fragment {
                     if (password.equals(confirmPassword)) {
                         Boolean checkUserEmail = databaseHelper.checkEmail(email);
                         if (!checkUserEmail) {
-                            User data = databaseHelper.insertData(email, password);
-                            if (data !=null) {
-                                Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_SHORT).show();
-                                MainActivity.user.setId(data.getId());
-                                MainActivity.user.setEmail(data.getEmail());
-                                MainActivity.user.setAmount(data.getAmount());
-                                // Navigate to LoginFragment after successful registration
-                                getFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, new LoginFragment())
-                                        .addToBackStack(null)
-                                        .commit();
-                            } else {
-                                Toast.makeText(getActivity(), "Registration Failed", Toast.LENGTH_SHORT).show();
-                            }
+                            databaseHelper.insertData(email, password);
+                            Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_SHORT).show();
+                            // Navigate to LoginFragment after successful registration
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, new LoginFragment())
+                                    .addToBackStack(null)
+                                    .commit();
+
                         } else {
                             Toast.makeText(getActivity(), "User already exists, please log in", Toast.LENGTH_SHORT).show();
                         }

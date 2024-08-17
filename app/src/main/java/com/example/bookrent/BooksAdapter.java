@@ -1,6 +1,9 @@
 package com.example.bookrent;
 
+import static com.example.bookrent.MainActivity.user;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
 import java.util.List;
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Book> booksList;
-    private final BooksDBHelper dbHelper;
-    private final MyDataBase myDataBase;
+    private MyDataBase myDataBase;
+    private ArrayList<Book> userBooks;
 
-    public BooksAdapter(Context context, List<Book> booksList, BooksDBHelper dbHelper) {
+    public BooksAdapter(Context context, List<Book> booksList, MyDataBase myDataBase) {
         this.context = context;
         this.booksList = booksList;
-        this.dbHelper = dbHelper;
-        this.myDataBase = new MyDataBase(context);
+        this.userBooks=new ArrayList<Book>();
+        this.myDataBase=myDataBase;
     }
 
     @NonNull
@@ -47,24 +51,43 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.textViewPrice.setText("Price: $" + book.getPrice());
         holder.textViewCategory.setText("Category: " + book.getCategory());
 
+        boolean condition=false;
+        for(Book book1 :userBooks)
+            if(book1.getId()==book.getId())condition=true;
+
+        holder.buttonAdd.setText(condition ? "Book Owned" : "Buy now!");
+        holder.buttonAdd.setEnabled(!condition);
+        holder.buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                if(user.getId()==-1){
+                    Toast.makeText(context,"Please Log in!",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if( !myDataBase.insertLast(String.valueOf(user.getId()),String.valueOf(book.getId()))){
+                        Toast.makeText(context, "Book added to cart", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(context, "Book already in cart", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+
         Glide.with(context)
                 .load(book.getImage())
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.error)
                 .into(holder.imageViewCover);
 
-        holder.buttonAdd.setOnClickListener(v -> {
-            dbHelper.addBookToCart(book.getId());
-            myDataBase.addBookToCart(book);
-            Toast.makeText(context, "Book added to cart", Toast.LENGTH_SHORT).show();
-        });
     }
 
     @Override
     public int getItemCount() {
         return booksList != null ? booksList.size() : 0;
     }
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle, textViewAuthor, textViewDescription, textViewReviews, textViewPrice, textViewCategory;
         ImageView imageViewCover;
         Button buttonAdd;
@@ -84,8 +107,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
 
 
     public void updateBooks(List<Book> updatedBooksList) {
-        booksList.clear();
-        booksList.addAll(updatedBooksList);
+        if(!userBooks.isEmpty())
+            userBooks.clear();
+        userBooks.addAll(updatedBooksList);
         notifyDataSetChanged();
     }
 }

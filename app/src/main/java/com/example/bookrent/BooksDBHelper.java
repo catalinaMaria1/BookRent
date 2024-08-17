@@ -27,7 +27,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_BOOKS_TABLE =
             "CREATE TABLE " + TABLE_NAME_BOOKS + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     COLUMN_TITLE + " TEXT," +
                     COLUMN_IMAGE + " TEXT," +
                     COLUMN_DESCRIPTION + " TEXT," +
@@ -81,10 +81,26 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DESCRIPTION, description);
         values.put(COLUMN_AUTHOR, author);
         values.put(COLUMN_REVIEWS, reviews);
-        values.put(COLUMN_IN_CART, 0);
         values.put(COLUMN_PRICE, price);
         values.put(COLUMN_CATEGORY,category);
         db.insert(TABLE_NAME_BOOKS, null, values);
+    }
+
+    public Book getBook(String id){
+        try(SQLiteDatabase db=this.getReadableDatabase()){
+            Cursor cursor=db.rawQuery("SELECT * FROM "+ TABLE_NAME_BOOKS+" WHERE "+ COLUMN_ID+" = ?",new String[]{id});
+            cursor.moveToFirst();
+            int bookId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE));
+            String image = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
+            String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
+            String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
+            double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE));
+            String category=cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY));
+            Book book=new Book(bookId,title,image,description,author,reviews,price,category);
+            return book;
+        }
     }
 
     public void insertBook(String title, String image, String description, String author, String reviews, double price, String category) {
@@ -92,47 +108,6 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         insertBook(db, title, image, description, author, reviews, price,category);
     }
 
-    public void addBookToCart(int bookId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_IN_CART, 1); // Mark as in cart
-        db.update(TABLE_NAME_BOOKS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
-    }
-
-    public void removeBookFromCart(int bookId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_IN_CART, 0); // Mark as not in cart
-        db.update(TABLE_NAME_BOOKS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
-    }
-
-    public ArrayList<Book> getBooksInCart() {
-        ArrayList<Book> booksList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME_BOOKS, null, COLUMN_IN_CART + " = ?", new String[]{"1"}, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE));
-                String image = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE));
-                String description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
-                String author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
-                String reviews = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEWS));
-                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE));
-                String category=cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY));
-
-                booksList.add(new Book(id, title, image, description, author, reviews, price,category));
-            } while (cursor.moveToNext());
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-
-        return booksList;
-    }
 
     public ArrayList<Book> getAllBooks() {
         ArrayList<Book> booksList = new ArrayList<>();

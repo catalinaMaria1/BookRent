@@ -2,12 +2,8 @@ package com.example.bookrent;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
@@ -18,13 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.bookrent.databinding.ActivityWalletBinding;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
@@ -32,22 +21,12 @@ import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import static com.example.bookrent.MainActivity.user;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class WalletFragment extends Fragment {
+    private PaymentUtil paymentUtil;
 
-    private String Secret="sk_test_51PlXVSCd8efrn7mxsszHUhYeHRavvy7GOs2Sz45lMOEZEjT6FSaoVodoCuCdUfH9M2HHgtZ5dEAlSBKpgeZPjbDR00pvrWuBn6";
-    private String Publish="pk_test_51PlXVSCd8efrn7mxQXcLVDgbs5x2VTk0Q8I9yhe5Is2DExc9XKWZuDbYEf23VEGiIppz0SSFyWE6vFcCDqlXi0wX007nTa0LHF";
 
     private PaymentSheet paymentSheet;
 
-    private String customerID;
-    private String EphericalKey;
-    private String ClientSecret;
     private String amount;
     private MyDataBase dataBase;
 
@@ -57,7 +36,8 @@ public class WalletFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Initialize Stripe SDK configuration here
-        PaymentConfiguration.init(getContext(), Publish);
+        paymentUtil=new PaymentUtil(getActivity());
+        PaymentConfiguration.init(getContext(), paymentUtil.Publish);
     }
 
     @Override
@@ -74,6 +54,7 @@ public class WalletFragment extends Fragment {
 
         // Initialize PaymentSheet after the view is created
         paymentSheet = new PaymentSheet(this, paymentSheetResult -> onPaymentResult(paymentSheetResult));
+        paymentUtil.setPaymentSheet(paymentSheet);
 
         Button button = binding.addMoney;
         EditText text = binding.moneyField;
@@ -82,10 +63,10 @@ public class WalletFragment extends Fragment {
 
         button.setOnClickListener(view1 -> {
             amount = String.valueOf(text.getText());
-            fetchData(amount);
+            paymentUtil.setAmount(amount);
+            paymentUtil.fetchData();
         });
 
-        // Fetch data after everything is set up
     }
 
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
@@ -95,141 +76,5 @@ public class WalletFragment extends Fragment {
             user.setAmount(money);
             dataBase.updateMoney(String.valueOf(user.getId()),money);
         }
-    }
-    private void fetchData(String amount){
-
-
-
-        StringRequest stringRequest= new StringRequest(Request.Method.POST,
-                "https://api.stripe.com/v1/customers",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            customerID=object.getString("id");
-
-                            getEphericalKey(customerID);
-                        }
-                        catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header=new HashMap<>();
-                header.put("Authorization","Bearer "+Secret);
-                return header;
-            }
-        };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        requestQueue.add(stringRequest);
-    }
-
-
-    private void getEphericalKey(String customerID){
-        StringRequest stringRequest= new StringRequest(Request.Method.POST,
-                "https://api.stripe.com/v1/ephemeral_keys",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            EphericalKey=object.getString("id");
-
-                            getClientSecret(customerID, EphericalKey);
-                        }
-                        catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getActivity(),"ERROR",Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header=new HashMap<>();
-                header.put("Authorization","Bearer "+Secret);
-                header.put("Stripe-Version","2024-06-20");
-                return header;
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params=new HashMap<>();
-                params.put("customer",customerID);
-
-                return params;
-            }
-        };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        requestQueue.add(stringRequest);
-
-    }
-
-    private void getClientSecret(String customerID, String ephericalKey) {
-        StringRequest stringRequest= new StringRequest(Request.Method.POST,
-                "https://api.stripe.com/v1/payment_intents",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject object=new JSONObject(response);
-                            ClientSecret=object.getString("client_secret");
-
-                            Toast.makeText(getActivity(),ClientSecret,Toast.LENGTH_SHORT).show();
-
-                            PaymentFlow();
-
-                        }
-                        catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(),String.valueOf(error),Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> header=new HashMap<>();
-                header.put("Authorization","Bearer "+Secret);
-                return header;
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params=new HashMap<>();
-
-                params.put("customer",customerID);
-                params.put("amount", amount+"00");
-                params.put("currency", "ron");
-
-                return params;
-            }
-        };
-        RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
-        requestQueue.add(stringRequest);
-    }
-
-    private void PaymentFlow() {
-        paymentSheet.presentWithPaymentIntent(ClientSecret,new PaymentSheet.Configuration("BookRent",
-                new PaymentSheet.CustomerConfiguration(
-                        customerID,
-                        EphericalKey
-                ))
-        );
     }
 }
