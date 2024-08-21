@@ -12,10 +12,19 @@
      android:layout_height="match_parent"
      android:background="@drawable/fundal">
 
+  <androidx.appcompat.widget.SearchView
+      android:id="@+id/search_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:layout_marginTop="40dp"
+      android:background="@color/cardview_light_background" />
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recyclerViewBooks"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_below="@+id/search_bar"
       android:padding="8dp" />
 
  </RelativeLayout>

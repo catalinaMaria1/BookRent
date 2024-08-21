@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        checkLoginStatus();  // Call the method to check login status and navigate accordingly.
+        checkLoginStatus();  
     }
 
     @Override

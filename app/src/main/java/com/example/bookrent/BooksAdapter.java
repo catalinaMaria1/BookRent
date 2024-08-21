@@ -1,4 +1,4 @@
-package com.example.bookrent;
+ package com.example.bookrent;
 
 import static com.example.bookrent.MainActivity.user;
 
@@ -23,9 +23,14 @@ import java.util.List;
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<Book> booksList;
+    private List<Book> booksList;
     private MyDataBase myDataBase;
     private ArrayList<Book> userBooks;
+
+    public void setFilteredList(List<Book> filteredList){
+        this.booksList=filteredList;
+        notifyDataSetChanged();
+    }
 
 
 
