@@ -9,6 +9,7 @@ public class User {
     private float amount;
     private ArrayList<Book> cart;
     private ArrayList<Book> ownedBooks= new ArrayList<>();
+    private String profilePic;
 
     public User(int id, String fullname, String email, ArrayList<Book> cart, ArrayList<Book> ownedBooks) {
         this.id = id;
@@ -70,5 +71,13 @@ public class User {
     public Float getAmount(){
         return amount;
     }
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePicUri) {
+        this.profilePic = profilePicUri;
+    }
+
 
 }

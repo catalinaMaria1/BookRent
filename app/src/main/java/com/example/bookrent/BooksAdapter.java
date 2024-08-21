@@ -27,6 +27,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     private MyDataBase myDataBase;
     private ArrayList<Book> userBooks;
 
+
+
     public BooksAdapter(Context context, List<Book> booksList, MyDataBase myDataBase) {
         this.context = context;
         this.booksList = booksList;
